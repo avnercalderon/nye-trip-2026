@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NYC 2025 🗽 | Avner & Omer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #141414;
+    --bg3: #1e1e1e;
+    --accent: #e8c84a;
+    --accent2: #e87c4a;
+    --text: #f0ede8;
+    --muted: #888;
+    --border: #2a2a2a;
+    --done-bg: #1a2a1a;
+    --done-text: #5aaa5a;
+    --eat: #e87c4a;
+    --do: #4a9ee8;
+    --buy: #a84ae8;
+    --tip-done: #3a3a1a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* HEADER */
+  .hero {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: 'NEW YORK';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12vw;
+    color: #ffffff05;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    position: relative;
+  }
+  .hero p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    position: relative;
+  }
+  /* TABS */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 0.85rem 0.5rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    min-height: 44px;
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  /* PANELS */
+  .panel { display: none; padding: 1rem; }
+  .panel.active { display: block; }
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    margin: 1.5rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  /* BANK GRID */
+  .bank-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  /* BANK ITEM */
+  .bank-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .bank-item:hover { border-color: var(--accent); }
+  .bank-item.done {
+    background: var(--done-bg);
+    border-color: #2a4a2a;
+  }
+  .bank-item.done .item-name { color: var(--done-text); text-decoration: line-through; }
+  .item-name {
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .item-tag {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+  .item-assigned {
+    font-size: 0.65rem;
+    margin-top: 0.3rem;
+    color: var(--accent);
+  }
+  .item-actions {
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+  }
+  .btn-tiny {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    min-height: 28px;
+    transition: all 0.15s;
+  }
+  .btn-tiny:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+  .btn-tiny.ask-claude { color: var(--accent); border-color: var(--accent); }
+  .btn-tiny.ask-claude:hover { background: var(--accent); color: #000; }
+  /* ADD ITEM */
+  .add-section {
+    background: var(--bg2);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+  .add-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+  input, select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 36px;
+  }
+  input { flex: 1; min-width: 120px; }
+  select { min-width: 90px; }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  .btn-add {
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    min-height: 36px;
+    transition: opacity 0.15s;
+  }
+  .btn-add:hover { opacity: 0.85; }
+  /* DAYS */
+  .day-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    user-select: none;
+  }
+  .day-header:hover { background: #252525; }
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+  .day-date { font-size: 0.75rem; color: var(--muted); }
+  .day-chevron { color: var(--muted); transition: transform 0.2s; font-size: 0.8rem; }
+  .day-card.open .day-chevron { transform: rotate(180deg); }
+  .day-body { display: none; padding: 0.75rem; }
+  .day-card.open .day-body { display: block; }
+  /* SLOTS */
+  .slots-grid {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .slot {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 48px;
+    transition: border-color 0.15s;
+  }
+  .slot.filled { border-color: #333; }
+  .slot-time {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    min-width: 50px;
+    letter-spacing: 0.5px;
+  }
+  .slot-content { flex: 1; }
+  .slot-name { font-size: 0.8rem; font-weight: 500; }
+  .slot-cat {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    margin-right: 0.3rem;
+  }
+  .cat-do { background: #1a2a3a; color: var(--do); }
+  .cat-eat { background: #3a1a0a; color: var(--eat); }
+  .cat-buy { background: #2a1a3a; color: var(--buy); }
+  .slot-actions { display: flex; gap: 0.3rem; }
+  .slot-empty-label { font-size: 0.75rem; color: var(--muted); }
+  /* SELECT FROM BANK MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 200;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 1.25rem;
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+  }
+  .modal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+  }
+  .modal-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.78rem;
+  }
+  .modal-item:hover { border-color: var(--accent); color: var(--accent); }
+  .modal-item.disabled { opacity: 0.35; pointer-events: none; text-decoration: line-through; }
+  /* CLAUDE PANEL */
+  .claude-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 300;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .claude-box {
+    background: var(--bg2);
+    border: 1px solid var(--accent);
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 1.25rem;
+    animation: slideUp 0.2s ease;
+  }
+  .claude-box h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+  .claude-box .place-name { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
+  .claude-response {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+  .claude-loading {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 1rem 0;
+  }
+  .dot-pulse { display: flex; gap: 4px; }
+  .dot-pulse span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1s infinite;
+  }
+  .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+  /* TIPS */
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .tip-item.done-tip {
+    background: var(--tip-done);
+    border-color: #4a4a1a;
+  }
+  .tip-check {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    background: var(--bg3);
+    margin-top: 1px;
+  }
+  .tip-item.done-tip .tip-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+  }
+  .tip-text { font-size: 0.82rem; line-height: 1.5; }
+  .tip-item.done-tip .tip-text { color: var(--muted); text-decoration: line-through; }
+  /* CLOSE BTN */
+  .btn-close-panel {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.65rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+  .btn-close-panel:hover { border-color: var(--accent); color: var(--text); }
+  /* FILTER ROW */
+  .filter-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .filter-btn {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    min-height: 32px;
+    transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #000; }
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2rem; }
+    .bank-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🗽 NYC 2025</h1>
+  <p>אבנר ועומר | 24.4 – 4.5</p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('bank')">🏦 בנק</button>
+  <button class="tab-btn" onclick="switchTab('schedule')">📅 לוח ימים</button>
+  <button class="tab-btn" onclick="switchTab('tips')">💡 טיפים</button>
+</div>
+
+<!-- BANK PANEL -->
+<div id="panel-bank" class="panel active">
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all', this)">הכל</button>
+    <button class="filter-btn" onclick="setFilter('do', this)" style="color:#4a9ee8;border-color:#1a2a3a;">לעשות</button>
+    <button class="filter-btn" onclick="setFilter('eat', this)" style="color:#e87c4a;border-color:#3a1a0a;">לאכול</button>
+    <button class="filter-btn" onclick="setFilter('buy', this)" style="color:#a84ae8;border-color:#2a1a3a;">לקנות</button>
+    <button class="filter-btn" onclick="setFilter('done', this)" style="color:#5aaa5a;border-color:#1a2a1a;">בוצע ✓</button>
+  </div>
+
+  <div id="bank-grid" class="bank-grid"></div>
+
+  <div class="add-section">
+    <div style="font-size:0.8rem;color:var(--muted);font-weight:500;">+ הוסף לבנק</div>
+    <div class="add-row">
+      <input type="text" id="new-name" placeholder="שם האטרקציה..." onkeydown="if(event.key==='Enter')addBankItem()">
+      <select id="new-cat">
+        <option value="do">לעשות</option>
+        <option value="eat">לאכול</option>
+        <option value="buy">לקנות</option>
+      </select>
+      <input type="text" id="new-note" placeholder="הערה (אופציונלי)" style="min-width:100px;">
+      <button class="btn-add" onclick="addBankItem()">הוסף</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE PANEL -->
+<div id="panel-schedule" class="panel">
+  <div id="days-container"></div>
+</div>
+
+<!-- TIPS PANEL -->
+<div id="panel-tips" class="panel">
+  <div id="tips-list"></div>
+</div>
+
+<!-- SELECT FROM BANK MODAL -->
+<div id="modal" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title">
+      <span>בחר מהבנק</span>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div id="modal-grid" class="modal-grid"></div>
+  </div>
+</div>
+
+<!-- EDIT ITEM MODAL -->
+<div id="edit-modal" class="modal-overlay" style="display:none;" onclick="closeEditModal(event)">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-title">
+      <span>עריכת פריט</span>
+      <button class="modal-close" onclick="closeEditModalDirect()">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.75rem;">
+      <div>
+        <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.3rem;">שם</label>
+        <input type="text" id="edit-name" style="width:100%;">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.3rem;">הערה / תיאור</label>
+        <input type="text" id="edit-note" style="width:100%;">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.3rem;">קטגוריה</label>
+        <select id="edit-cat" style="width:100%;">
+          <option value="do">לעשות</option>
+          <option value="eat">לאכול</option>
+          <option value="buy">לקנות</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+        <button class="btn-add" onclick="saveEditItem()" style="flex:1;">שמור</button>
+        <button class="btn-tiny" onclick="deleteItem()" style="color:#e87c4a;border-color:#e87c4a;padding:0.5rem 1rem;flex-shrink:0;">מחק</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="claude-panel" class="claude-panel" style="display:none;" onclick="closeClaudePanel(event)">
+  <div class="claude-box">
+    <h3>Claude על המקום</h3>
+    <div id="claude-place-name" class="place-name"></div>
+    <div id="claude-response">
+      <div class="claude-loading">
+        <div class="dot-pulse"><span></span><span></span><span></span></div>
+        <span>חושב...</span>
+      </div>
+    </div>
+    <button class="btn-close-panel" onclick="closeClaudePanelDirect()">סגור</button>
+  </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+let bank = {
+  do: [
+    { id: 'nba', name: 'NBA Game', note: 'Madison Square Garden', done: false, assignedDay: null },
+    { id: 'baseball', name: 'Baseball Game', note: 'Yankee Stadium / Mets', done: false, assignedDay: null },
+    { id: 'mls', name: 'MLS Soccer', note: 'FC New York', done: false, assignedDay: null },
+    { id: 'msg', name: 'MSG Tour', note: 'Madison Square Garden', done: false, assignedDay: null },
+    { id: 'highline', name: 'High Line', note: 'שביל מוגבה לשעבר', done: false, assignedDay: null },
+    { id: 'littleisland', name: 'Little Island', note: 'פארק מעל הנהר', done: false, assignedDay: null },
+    { id: 'vessel', name: 'The Vessel', note: 'Hudson Yards', done: false, assignedDay: null },
+    { id: 'riseny', name: 'RiseNY', note: 'Times Square', done: false, assignedDay: null },
+    { id: 'intrepid', name: 'Intrepid Museum', note: 'מוזיאון נושאת מטוסים', done: false, assignedDay: null },
+    { id: 'sol', name: 'Statue of Liberty', note: '?', done: false, assignedDay: null },
+    { id: 'summit', name: 'SUMMIT One Vanderbilt', note: 'תצפית אדירה', done: false, assignedDay: null },
+    { id: 'toprock', name: 'Top of the Rock', note: 'Rockefeller Center', done: false, assignedDay: null },
+    { id: '911', name: '9/11 Museum', note: 'חובה', done: false, assignedDay: null },
+    { id: 'un', name: 'United Nations', note: 'סיור UN', done: false, assignedDay: null },
+    { id: 'rockskate', name: 'Rockefeller Skating', note: 'גלישה על קרח', done: false, assignedDay: null },
+    { id: 'plaza', name: 'The Plaza Hotel', note: 'חלון ראווה אייקוני', done: false, assignedDay: null },
+    { id: 'centralpark', name: 'Central Park', note: 'פשוט לטייל', done: false, assignedDay: null },
+    { id: 'washingtonsq', name: 'Washington Square', note: 'Village vibes', done: false, assignedDay: null },
+    { id: 'w4th', name: 'W 4th St Courts', note: 'כדורסל רחוב אגדי', done: false, assignedDay: null },
+    { id: 'seinfeld', name: 'Seinfeld Apt', note: '129 W 81st St', done: false, assignedDay: null },
+    { id: 'nathistory', name: 'Natural History Museum', note: 'דינוזאורים!', done: false, assignedDay: null },
+    { id: 'lennon', name: 'Strawberry Fields', note: 'ג\'ון לנון, W71-74', done: false, assignedDay: null },
+    { id: 'ferry', name: 'NYC Ferry', note: 'Sound View', done: false, assignedDay: null },
+  ],
+  eat: [
+    { id: 'smorg', name: 'Smorgasburg', note: 'שוק אוכל חיצוני', done: false, assignedDay: null },
+    { id: 'katz', name: 'Katz\'s Deli', note: 'הפסטרמה המפורסמת', done: false, assignedDay: null },
+    { id: 'momofuku', name: 'Momofuku', note: 'אסייתי מעולה', done: false, assignedDay: null },
+    { id: 'habana', name: 'Cafe Habana', note: 'תירס גריל + קובני', done: false, assignedDay: null },
+    { id: 'luger', name: 'Peter Luger', note: 'סטייק אגדי בברוקלין', done: false, assignedDay: null },
+    { id: 'fiveguys', name: 'Five Guys', note: 'המבורגר אמריקאי', done: false, assignedDay: null },
+    { id: 'friedice', name: 'Fried Ice Cream + Oreos', note: 'חובה לעומר', done: false, assignedDay: null },
+    { id: 'chelsea', name: 'Chelsea Market', note: 'שוק אוכל מקורה', done: false, assignedDay: null },
+    { id: 'quinn', name: 'Mighty Quinn BBQ', note: 'BBQ ניו יורקי', done: false, assignedDay: null },
+    { id: 'kobe', name: 'Kings of Kobe', note: 'בייגל קובה', done: false, assignedDay: null },
+    { id: 'hamburger', name: 'Hamburger America', note: 'מקום קלאסי', done: false, assignedDay: null },
+    { id: 'raku', name: 'Raku Ramen', note: 'ראמן טוב', done: false, assignedDay: null },
+    { id: 'chipotle', name: 'Chipotle', note: 'ברוריטו מהיר', done: false, assignedDay: null },
+  ],
+  buy: [
+    { id: 'tjmaxx', name: 'TJ Maxx', note: 'דיל הנטינג', done: false, assignedDay: null },
+    { id: 'nbastore', name: 'NBA Store', note: 'חובה לעומר', done: false, assignedDay: null },
+    { id: 'pasteur', name: 'Pasteur Pharmacy', note: 'מוצרי קוסמטיקה', done: false, assignedDay: null },
+    { id: 'fao', name: 'FAO Schwartz', note: 'חנות צעצועים אגדית', done: false, assignedDay: null },
+    { id: 'lego', name: 'Lego Store', note: 'Midtown', done: false, assignedDay: null },
+    { id: 'adidas', name: 'Adidas Originals', note: 'NYC Flagship', done: false, assignedDay: null },
+    { id: 'apple', name: 'Apple Store', note: '5th Ave Cube', done: false, assignedDay: null },
+    { id: 'traderjoes', name: 'Trader Joe\'s', note: 'קניות טעימות', done: false, assignedDay: null },
+    { id: 'target', name: 'Target', note: 'כל הצרכים', done: false, assignedDay: null },
+    { id: 'mms', name: 'M&Ms Store', note: 'Times Square', done: false, assignedDay: null },
+    { id: 'jerseygard', name: 'Jersey Gardens', note: 'אאוטלט ניו ג\'רזי', done: false, assignedDay: null },
+  ]
+};
+
+const DAYS = [
+  { id: 'd1', label: 'יום 1', date: 'יום ה׳, 24 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd2', label: 'יום 2', date: 'יום ו׳, 25 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd3', label: 'יום 3', date: 'שבת, 26 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd4', label: 'יום 4', date: 'ראשון, 27 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd5', label: 'יום 5', date: 'שני, 28 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd6', label: 'יום 6', date: 'שלישי, 29 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd7', label: 'יום 7', date: 'רביעי, 30 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd8', label: 'יום 8', date: 'חמישי, 1 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd9', label: 'יום 9', date: 'שישי, 2 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd10', label: 'יום 10', date: 'שבת, 3 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd11', label: 'יום 11', date: 'ראשון, 4 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
+];
+
+let schedule = {}; // dayId -> { slotName: { itemId, cat } }
+DAYS.forEach(d => { schedule[d.id] = {}; });
+
+const TIPS = [
+  { id: 't1', text: '📱 הורד את אפליקציית MTA – כל פרטי מטרו ואוטובוס בזמן אמת', done: false },
+  { id: 't2', text: '🎫 קנה MetroCard ב-$34 לשבוע – ללא הגבלת נסיעות', done: false },
+  { id: 't3', text: '🚕 כלל הזהב: לעולם אל תיסע ב-Taxi – Uber/Lyft תמיד זול יותר', done: false },
+  { id: 't4', text: '🍕 פרוסת פיצה כשר? Basil Pizza בשדרה ה-5. פיצה כי כי? כל פינה', done: false },
+  { id: 't5', text: '👟 תנעל נעלי הליכה מוריות – תלך בממוצע 20,000+ צעדים ביום', done: false },
+  { id: 't6', text: '🏀 W 4th St Courts (The Cage) – תלך עם עומר, תראה בסקטבול רחוב אמיתי', done: false },
+  { id: 't7', text: '🌅 Sunrise בגשר ברוקלין – תגיע ב-6AM, ריק מאנשים, תמונות מגעילות', done: false },
+  { id: 't8', text: '🛒 קניות קוסמטיקה: Pasteur Pharmacy ב-Midtown – מחירים פנומנליים', done: false },
+  { id: 't9', text: '🔌 תקן חשמל אמריקאי A/B – 110V. הבא מתאם אם צריך', done: false },
+  { id: 't10', text: '🧳 Jersey Gardens Outlet – 45 דקות מ-Manhattan, פנה חצי יום', done: false },
+  { id: 't11', text: '💧 מים בחינם בכל מקום – NYC tap water מהטובים בעולם', done: false },
+  { id: 't12', text: '🌆 תצפית בחינם? גג קולסייוס של Whole Foods ב-Bryant Park', done: false },
+  { id: 't13', text: '📸 Brooklyn Bridge – תחצה ברגל מ-Brooklyn לצד Manhattan, תמונות שיגעון', done: false },
+  { id: 't14', text: '🎭 TKTS Booth בTimes Square – כרטיסי Broadway ב-50% הנחה ביום ההצגה', done: false },
+  { id: 't15', text: '⚡ Smorgasburg – כל שבת בברוקלין (Williamsburg) ו-Prospect Park', done: false },
+  { id: 't16', text: '💵 טיפ – בארה"ב חובה לתת 18-20% במסעדות, מוגש ב-bill בדרך כלל', done: false },
+  { id: 't17', text: '🌉 Staten Island Ferry – בחינם, נוף אדיר לפסל החירות, 25 דקות', done: false },
+  { id: 't18', text: '📵 International plan – בדוק עם סלולרי לפני היציאה, Verizon/AT&T roaming יקר', done: false },
+  { id: 't19', text: '🎒 תשאיר דרכון בכספת המלון, תצא רק עם צילום', done: false },
+  { id: 't20', text: '🏨 Midtown הכי נוח לתחבורה – Times Square קרוב לכל, אבל רועש בלילה', done: false },
+];
+
+let tipsState = {};
+TIPS.forEach(t => tipsState[t.id] = false);
+
+let activeFilter = 'all';
+let pendingSlot = null; // { dayId, slotIndex }
+let claudeCache = {};
+
+// ==================== STATE PERSISTENCE (CLOUD) ====================
+let saveTimer = null;
+
+function buildStateSnapshot() {
+  const allItems = [...bank.do, ...bank.eat, ...bank.buy];
+  const doneMap = {}, assignedMap = {};
+  allItems.forEach(it => { doneMap[it.id] = it.done; assignedMap[it.id] = it.assignedDay; });
+  return {
+    doneMap,
+    assignedMap,
+    schedule,
+    tipsState,
+    tipsList: tips.map(t => ({ id: t.id, text: t.text })),
+    bankFull: {
+      do: bank.do,
+      eat: bank.eat,
+      buy: bank.buy,
+    }
+  };
+}
+
+function applyStateSnapshot(snap) {
+  if (!snap) return;
+  const { doneMap, assignedMap, schedule: savedSchedule, tipsState: savedTips, tipsList, bankFull, bankCustom } = snap;
+
+  // restore bank – prefer full bank snapshot, fall back to custom-only for old saves
+  if (bankFull) {
+    ['do','eat','buy'].forEach(cat => { if (bankFull[cat]?.length) bank[cat] = bankFull[cat]; });
+  } else if (bankCustom) {
+    ['do','eat','buy'].forEach(cat => {
+      if (!bankCustom[cat]) return;
+      bankCustom[cat].forEach(ci => {
+        if (!bank[cat].find(i => i.id === ci.id)) bank[cat].push(ci);
+      });
+    });
+  }
+
+  const allItems = [...bank.do, ...bank.eat, ...bank.buy];
+  allItems.forEach(it => {
+    if (doneMap?.[it.id] !== undefined) it.done = doneMap[it.id];
+    if (assignedMap?.[it.id] !== undefined) it.assignedDay = assignedMap[it.id];
+  });
+  DAYS.forEach(d => { if (savedSchedule?.[d.id]) schedule[d.id] = savedSchedule[d.id]; });
+  if (savedTips) Object.keys(savedTips).forEach(k => { tipsState[k] = savedTips[k]; });
+  if (tipsList) {
+    tips = tipsList;
+    tips.forEach(t => { if (tipsState[t.id] === undefined) tipsState[t.id] = false; });
+  }
+}
+
+function saveState() {
+  // debounce – wait 800ms after last change before sending
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const snap = buildStateSnapshot();
+    try {
+      await fetch('/api/state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(snap)
+      });
+    } catch(e) { console.warn('save failed', e); }
+  }, 800);
+}
+
+async function loadState() {
+  try {
+    const res = await fetch('/api/state');
+    const { state } = await res.json();
+    if (state) {
+      const snap = typeof state === 'string' ? JSON.parse(state) : state;
+      applyStateSnapshot(snap);
+    }
+  } catch(e) { console.warn('load failed', e); }
+}
+
+// ==================== RENDER BANK ====================
+function getAllItems() {
+  return [...bank.do.map(i=>({...i,cat:'do'})), ...bank.eat.map(i=>({...i,cat:'eat'})), ...bank.buy.map(i=>({...i,cat:'buy'}))];
+}
+
+function renderBank() {
+  const grid = document.getElementById('bank-grid');
+  let items = getAllItems();
+  if (activeFilter === 'do') items = items.filter(i => i.cat === 'do');
+  else if (activeFilter === 'eat') items = items.filter(i => i.cat === 'eat');
+  else if (activeFilter === 'buy') items = items.filter(i => i.cat === 'buy');
+  else if (activeFilter === 'done') items = items.filter(i => i.done);
+
+  const catLabel = { do: 'לעשות', eat: 'לאכול', buy: 'לקנות' };
+  const catBadgeStyle = {
+    do: 'background:#1a2a3a;color:#4a9ee8;',
+    eat: 'background:#3a1a0a;color:#e87c4a;',
+    buy: 'background:#2a1a3a;color:#a84ae8;'
+  };
+
+  grid.innerHTML = items.map(item => `
+    <div class="bank-item ${item.done ? 'done' : ''}" id="bitem-${item.id}">
+      <div style="margin-bottom:0.35rem;">
+        <span style="font-size:0.6rem;padding:0.15rem 0.5rem;border-radius:4px;cursor:pointer;${catBadgeStyle[item.cat]}" onclick="cycleCat('${item.id}','${item.cat}')" title="לחץ לשינוי קטגוריה">${catLabel[item.cat]} ↻</span>
+      </div>
+      <div class="item-name">${item.name}</div>
+      <div class="item-tag">${item.note || ''}</div>
+      ${item.assignedDay ? `<div class="item-assigned">📅 יום ${item.assignedDay}</div>` : ''}
+      <div class="item-actions">
+        <button class="btn-tiny" onclick="toggleDone('${item.id}','${item.cat}')">${item.done ? '↩ בטל' : '✓ בוצע'}</button>
+        <button class="btn-tiny" onclick="openEditItem('${item.id}','${item.cat}')" title="ערוך">✎</button>
+        <button class="btn-tiny ask-claude" onclick="askClaude('${item.id}','${item.cat}')">Claude →</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBank();
+}
+
+function toggleDone(id, cat) {
+  const item = bank[cat].find(i => i.id === id);
+  if (item) { item.done = !item.done; saveState(); renderBank(); renderSchedule(); }
+}
+
+function cycleCat(id, currentCat) {
+  const order = ['do', 'eat', 'buy'];
+  const nextCat = order[(order.indexOf(currentCat) + 1) % 3];
+  const item = bank[currentCat].find(i => i.id === id);
+  if (!item) return;
+  bank[currentCat] = bank[currentCat].filter(i => i.id !== id);
+  item.cat = nextCat;
+  bank[nextCat].push(item);
+  // update schedule references
+  DAYS.forEach(d => {
+    Object.keys(schedule[d.id]).forEach(sl => {
+      if (schedule[d.id][sl]?.itemId === id) schedule[d.id][sl].cat = nextCat;
+    });
+  });
+  saveState(); renderBank(); renderSchedule();
+}
+
+function addBankItem() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) return;
+  const cat = document.getElementById('new-cat').value;
+  const note = document.getElementById('new-note').value.trim();
+  const id = 'custom_' + Date.now();
+  bank[cat].push({ id, name, note, done: false, assignedDay: null });
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-note').value = '';
+  saveState(); renderBank();
+}
+
+// ==================== RENDER SCHEDULE ====================
+function getItem(id) {
+  return getAllItems().find(i => i.id === id);
+}
+
+function renderSchedule() {
+  const container = document.getElementById('days-container');
+  container.innerHTML = DAYS.map(day => {
+    const slots = day.slots.map((slotName, si) => {
+      const filled = schedule[day.id][slotName];
+      const slotNum = si + 1;
+      if (filled) {
+        const item = getItem(filled.itemId);
+        if (!item) return '';
+        const catClass = { do:'cat-do', eat:'cat-eat', buy:'cat-buy' }[filled.cat] || '';
+        const catLab = { do:'לעשות', eat:'לאכול', buy:'לקנות' }[filled.cat] || '';
+        return `<div class="slot filled">
+          <div class="slot-time">${slotNum}</div>
+          <div class="slot-content">
+            <span class="slot-cat ${catClass}">${catLab}</span>
+            <span class="slot-name ${item.done ? 'done-text' : ''}">${item.name}</span>
+          </div>
+          <div class="slot-actions">
+            <button class="btn-tiny ask-claude" onclick="askClaude('${item.id}','${filled.cat}')">Claude</button>
+            <button class="btn-tiny" onclick="removeSlot('${day.id}','${slotName}')">✕</button>
+          </div>
+        </div>`;
+      } else {
+        return `<div class="slot">
+          <div class="slot-time">${slotNum}</div>
+          <div class="slot-content"><span class="slot-empty-label">ריק – לחץ להוספה</span></div>
+          <div class="slot-actions">
+            <button class="btn-tiny" onclick="openModal('${day.id}','${slotName}')">+ הוסף</button>
+          </div>
+        </div>`;
+      }
+    }).join('');
+
+    return `<div class="day-card" id="daycard-${day.id}">
+      <div class="day-header" onclick="toggleDay('${day.id}')">
+        <div>
+          <div class="day-title">${day.label}</div>
+          <div class="day-date">${day.date}</div>
+        </div>
+        <div class="day-chevron">▼</div>
+      </div>
+      <div class="day-body">
+        <div class="slots-grid">${slots}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDay(id) {
+  document.getElementById('daycard-' + id).classList.toggle('open');
+}
+
+function removeSlot(dayId, slotName) {
+  const filled = schedule[dayId][slotName];
+  if (filled) {
+    const item = bank[filled.cat].find(i => i.id === filled.itemId);
+    if (item) item.assignedDay = null;
+  }
+  delete schedule[dayId][slotName];
+  saveState(); renderSchedule(); renderBank();
+}
+
+// ==================== MODAL ====================
+function openModal(dayId, slotName) {
+  pendingSlot = { dayId, slotName };
+  const grid = document.getElementById('modal-grid');
+  const items = getAllItems().filter(i => !i.done);
+  grid.innerHTML = items.map(item => {
+    const alreadyInDay = Object.values(schedule[dayId]).some(s => s.itemId === item.id);
+    return `<div class="modal-item ${alreadyInDay ? 'disabled' : ''}" onclick="assignToSlot('${item.id}','${item.cat}')">
+      ${item.name}
+      <div style="font-size:0.6rem;color:var(--muted);margin-top:3px;">${item.note||''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function assignToSlot(itemId, cat) {
+  if (!pendingSlot) return;
+  const { dayId, slotName } = pendingSlot;
+  const item = bank[cat].find(i => i.id === itemId);
+  if (item) {
+    // remove old assignment if existed
+    if (item.assignedDay) {
+      const oldDay = schedule['d' + item.assignedDay];
+      if (oldDay) { Object.keys(oldDay).forEach(k => { if(oldDay[k]?.itemId===itemId) delete oldDay[k]; }); }
+    }
+    const dayNum = DAYS.findIndex(d => d.id === dayId) + 1;
+    item.assignedDay = dayNum;
+    schedule[dayId][slotName] = { itemId, cat };
+  }
+  pendingSlot = null;
+  document.getElementById('modal').style.display = 'none';
+  saveState(); renderSchedule(); renderBank();
+}
+
+function closeModal(e) { if (e.target.id === 'modal') closeModalDirect(); }
+function closeModalDirect() {
+  document.getElementById('modal').style.display = 'none';
+  pendingSlot = null;
+}
+
+// ==================== CLAUDE ====================
+async function askClaude(itemId, cat) {
+  const item = bank[cat].find(i => i.id === itemId);
+  if (!item) return;
+
+  document.getElementById('claude-place-name').textContent = item.name + (item.note ? ' – ' + item.note : '');
+  document.getElementById('claude-response').innerHTML = `<div class="claude-loading"><div class="dot-pulse"><span></span><span></span><span></span></div><span>שואל Claude...</span></div>`;
+  document.getElementById('claude-panel').style.display = 'flex';
+
+  if (claudeCache[itemId]) {
+    document.getElementById('claude-response').innerHTML = `<div class="claude-response">${claudeCache[itemId]}</div>`;
+    return;
+  }
+
+  const catHeb = { do:'אטרקציה', eat:'מסעדה / אוכל', buy:'חנות' }[cat] || '';
+  const prompt = `אני אבנר, קב"ן בקרת תעופה ישראלי, נוסע לניו יורק עם בני עומר בן 13. ספר לי על: "${item.name}" (${catHeb}). 
+  
+  כלול: למה כדאי ללכת, מה מייחד את המקום, טיפים מעשיים (שעות, מחיר, הגעה), האם מתאים לנער בן 13, ועוד פרטים שכדאי לדעת. ענה בעברית, קצר ולעניין (כ-150 מילה).`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.find(c => c.type === 'text')?.text || 'לא הצלחתי לקבל תשובה.';
+    claudeCache[itemId] = text;
+    document.getElementById('claude-response').innerHTML = `<div class="claude-response">${text}</div>`;
+  } catch(e) {
+    document.getElementById('claude-response').innerHTML = `<div class="claude-response" style="color:var(--muted);">שגיאה בחיבור ל-Claude. נסה שוב.</div>`;
+  }
+}
+
+function closeClaudePanel(e) { if (e.target.id === 'claude-panel') closeClaudePanelDirect(); }
+function closeClaudePanelDirect() { document.getElementById('claude-panel').style.display = 'none'; }
+
+// ==================== EDIT ITEM ====================
+let editingItemId = null;
+let editingItemCat = null;
+
+function openEditItem(id, cat) {
+  const item = bank[cat].find(i => i.id === id);
+  if (!item) return;
+  editingItemId = id;
+  editingItemCat = cat;
+  document.getElementById('edit-name').value = item.name;
+  document.getElementById('edit-note').value = item.note || '';
+  document.getElementById('edit-cat').value = cat;
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+
+function saveEditItem() {
+  if (!editingItemId) return;
+  const newName = document.getElementById('edit-name').value.trim();
+  const newNote = document.getElementById('edit-note').value.trim();
+  const newCat = document.getElementById('edit-cat').value;
+  if (!newName) return;
+
+  const item = bank[editingItemCat].find(i => i.id === editingItemId);
+  if (!item) return;
+  item.name = newName;
+  item.note = newNote;
+
+  if (newCat !== editingItemCat) {
+    bank[editingItemCat] = bank[editingItemCat].filter(i => i.id !== editingItemId);
+    item.cat = newCat;
+    bank[newCat].push(item);
+    DAYS.forEach(d => {
+      Object.keys(schedule[d.id]).forEach(sl => {
+        if (schedule[d.id][sl]?.itemId === editingItemId) schedule[d.id][sl].cat = newCat;
+      });
+    });
+  }
+
+  delete claudeCache[editingItemId];
+  closeEditModalDirect();
+  saveState(); renderBank(); renderSchedule();
+}
+
+function deleteItem() {
+  if (!editingItemId) return;
+  if (!confirm('למחוק את הפריט?')) return;
+  // remove from schedule
+  DAYS.forEach(d => {
+    Object.keys(schedule[d.id]).forEach(sl => {
+      if (schedule[d.id][sl]?.itemId === editingItemId) delete schedule[d.id][sl];
+    });
+  });
+  bank[editingItemCat] = bank[editingItemCat].filter(i => i.id !== editingItemId);
+  closeEditModalDirect();
+  saveState(); renderBank(); renderSchedule();
+}
+
+function closeEditModal(e) { if (e.target.id === 'edit-modal') closeEditModalDirect(); }
+function closeEditModalDirect() {
+  document.getElementById('edit-modal').style.display = 'none';
+  editingItemId = null; editingItemCat = null;
+}
+
+
+let tips = [...TIPS];
+let editingTipId = null;
+
+function renderTips() {
+  const container = document.getElementById('tips-list');
+  container.innerHTML = `
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;margin-bottom:1rem;color:var(--accent);">טיפים לניו יורק</div>
+    ${tips.map(tip => {
+      const done = tipsState[tip.id];
+      if (editingTipId === tip.id) {
+        return `<div class="tip-item" style="flex-direction:column;align-items:stretch;gap:0.5rem;">
+          <textarea id="tip-edit-${tip.id}" style="background:var(--bg3);border:1px solid var(--accent);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:0.82rem;padding:0.5rem;resize:vertical;min-height:60px;width:100%;">${tip.text}</textarea>
+          <div style="display:flex;gap:0.4rem;">
+            <button class="btn-tiny" style="flex:1;" onclick="saveTipEdit('${tip.id}')">שמור</button>
+            <button class="btn-tiny" onclick="editingTipId=null;renderTips()">ביטול</button>
+          </div>
+        </div>`;
+      }
+      return `<div class="tip-item ${done ? 'done-tip' : ''}">
+        <div class="tip-check" onclick="toggleTip('${tip.id}')">${done ? '✓' : ''}</div>
+        <div class="tip-text" style="flex:1;" onclick="toggleTip('${tip.id}')">${tip.text}</div>
+        <div style="display:flex;gap:0.25rem;flex-shrink:0;">
+          <button class="btn-tiny" onclick="event.stopPropagation();startEditTip('${tip.id}')" title="ערוך">✎</button>
+          <button class="btn-tiny" onclick="event.stopPropagation();deleteTip('${tip.id}')" title="מחק" style="color:#e87c4a;">✕</button>
+        </div>
+      </div>`;
+    }).join('')}
+    <div class="add-section" style="margin-top:1rem;">
+      <div style="font-size:0.8rem;color:var(--muted);font-weight:500;margin-bottom:0.6rem;">+ הוסף טיפ חדש</div>
+      <textarea id="new-tip-text" placeholder="כתוב טיפ חדש..." style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Heebo',sans-serif;font-size:0.8rem;padding:0.5rem 0.75rem;resize:vertical;min-height:50px;width:100%;margin-bottom:0.5rem;"></textarea>
+      <button class="btn-add" onclick="addTip()" style="width:100%;">הוסף טיפ</button>
+    </div>
+  `;
+}
+
+function toggleTip(id) {
+  tipsState[id] = !tipsState[id];
+  saveState(); renderTips();
+}
+
+function startEditTip(id) {
+  editingTipId = id;
+  renderTips();
+  const ta = document.getElementById('tip-edit-' + id);
+  if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+}
+
+function saveTipEdit(id) {
+  const ta = document.getElementById('tip-edit-' + id);
+  if (!ta) return;
+  const newText = ta.value.trim();
+  if (!newText) return;
+  const tip = tips.find(t => t.id === id);
+  if (tip) tip.text = newText;
+  editingTipId = null;
+  saveState(); renderTips();
+}
+
+function deleteTip(id) {
+  tips = tips.filter(t => t.id !== id);
+  delete tipsState[id];
+  saveState(); renderTips();
+}
+
+function addTip() {
+  const ta = document.getElementById('new-tip-text');
+  const text = ta?.value.trim();
+  if (!text) return;
+  const id = 'tip_' + Date.now();
+  tips.push({ id, text });
+  tipsState[id] = false;
+  ta.value = '';
+  saveState(); renderTips();
+}
+
+// ==================== TABS ====================
+function switchTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ==================== INIT ====================
+(async () => {
+  await loadState();
+  renderBank();
+  renderSchedule();
+  renderTips();
+})();
+</script>
+</body>
+</html>
