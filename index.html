@@ -24,6 +24,7 @@
     --tip-done: #3a3a1a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; }
   body {
     font-family: 'Heebo', sans-serif;
     background: var(--bg);
@@ -48,7 +49,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     white-space: nowrap;
     pointer-events: none;
   }
@@ -205,7 +206,7 @@
     letter-spacing: 1px;
     padding: 0.5rem 1.2rem;
     cursor: pointer;
-    min-height: 36px;
+    min-height: 44px;
     transition: opacity 0.15s;
   }
   .btn-add:hover { opacity: 0.85; }
@@ -226,6 +227,7 @@
     background: var(--bg3);
     border-bottom: 1px solid var(--border);
     user-select: none;
+    min-height: 44px;
   }
   .day-header:hover { background: #252525; }
   .day-title {
@@ -314,6 +316,8 @@
     font-size: 1.2rem;
     cursor: pointer;
     padding: 0 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
   }
   .modal-grid {
     display: grid;
@@ -328,6 +332,7 @@
     cursor: pointer;
     transition: all 0.15s;
     font-size: 0.78rem;
+    min-height: 44px;
   }
   .modal-item:hover { border-color: var(--accent); color: var(--accent); }
   .modal-item.disabled { opacity: 0.35; pointer-events: none; text-decoration: line-through; }
@@ -402,7 +407,7 @@
     border-color: #4a4a1a;
   }
   .tip-check {
-    width: 20px; height: 20px;
+    width: 24px; height: 24px;
     border: 1.5px solid var(--border);
     border-radius: 4px;
     flex-shrink: 0;
@@ -435,6 +440,7 @@
     cursor: pointer;
     text-align: center;
     transition: border-color 0.15s;
+    min-height: 44px;
   }
   .btn-close-panel:hover { border-color: var(--accent); color: var(--text); }
   /* FILTER ROW */
@@ -460,7 +466,12 @@
   /* Responsive */
   @media (max-width: 600px) {
     .hero h1 { font-size: 2rem; }
+    .hero { padding: 1.5rem 1rem 1rem; }
     .bank-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    .panel { padding: 0.75rem; }
+    .btn-add { width: 100%; }
+    .add-row { flex-direction: column; }
+    .add-row input, .add-row select { width: 100%; min-width: 0; }
   }
 </style>
 </head>
@@ -472,9 +483,9 @@
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('bank')">🏦 בנק</button>
-  <button class="tab-btn" onclick="switchTab('schedule')">📅 לוח ימים</button>
-  <button class="tab-btn" onclick="switchTab('tips')">💡 טיפים</button>
+  <button class="tab-btn active" onclick="switchTab('bank', this)">🏦 בנק</button>
+  <button class="tab-btn" onclick="switchTab('schedule', this)">📅 לוח ימים</button>
+  <button class="tab-btn" onclick="switchTab('tips', this)">💡 טיפים</button>
 </div>
 
 <!-- BANK PANEL -->
@@ -551,7 +562,7 @@
       </div>
       <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
         <button class="btn-add" onclick="saveEditItem()" style="flex:1;">שמור</button>
-        <button class="btn-tiny" onclick="deleteItem()" style="color:#e87c4a;border-color:#e87c4a;padding:0.5rem 1rem;flex-shrink:0;">מחק</button>
+        <button class="btn-tiny" onclick="deleteItem()" style="color:#e87c4a;border-color:#e87c4a;padding:0.5rem 1rem;flex-shrink:0;min-height:44px;">מחק</button>
       </div>
     </div>
   </div>
@@ -630,55 +641,62 @@ let bank = {
   ]
 };
 
+// ==================== DAYS — תאריכים מתוקנים ל-2026 ====================
+// 24.4.2026 = שישי ; 25.4 = שבת ; 26.4 = ראשון ... 4.5 = שני
 const DAYS = [
-  { id: 'd1', label: 'יום 1', date: 'יום ה׳, 24 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd2', label: 'יום 2', date: 'יום ו׳, 25 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd3', label: 'יום 3', date: 'שבת, 26 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd4', label: 'יום 4', date: 'ראשון, 27 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd5', label: 'יום 5', date: 'שני, 28 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd6', label: 'יום 6', date: 'שלישי, 29 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd7', label: 'יום 7', date: 'רביעי, 30 אפריל', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd8', label: 'יום 8', date: 'חמישי, 1 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd9', label: 'יום 9', date: 'שישי, 2 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd10', label: 'יום 10', date: 'שבת, 3 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
-  { id: 'd11', label: 'יום 11', date: 'ראשון, 4 מאי', slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd1',  label: 'יום 1',  date: 'יום ו׳, 24 אפריל',    slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd2',  label: 'יום 2',  date: 'שבת, 25 אפריל',       slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd3',  label: 'יום 3',  date: 'ראשון, 26 אפריל',     slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd4',  label: 'יום 4',  date: 'שני, 27 אפריל',       slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd5',  label: 'יום 5',  date: 'שלישי, 28 אפריל',     slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd6',  label: 'יום 6',  date: 'רביעי, 29 אפריל',     slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd7',  label: 'יום 7',  date: 'יום ה׳, 30 אפריל',    slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd8',  label: 'יום 8',  date: 'יום ו׳, 1 מאי',       slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd9',  label: 'יום 9',  date: 'שבת, 2 מאי',          slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd10', label: 'יום 10', date: 'ראשון, 3 מאי',         slots: ['s1','s2','s3','s4','s5','s6'] },
+  { id: 'd11', label: 'יום 11', date: 'שני, 4 מאי',           slots: ['s1','s2','s3','s4','s5','s6'] },
 ];
 
 let schedule = {}; // dayId -> { slotName: { itemId, cat } }
 DAYS.forEach(d => { schedule[d.id] = {}; });
 
 const TIPS = [
-  { id: 't1', text: '📱 הורד את אפליקציית MTA – כל פרטי מטרו ואוטובוס בזמן אמת', done: false },
-  { id: 't2', text: '🎫 קנה MetroCard ב-$34 לשבוע – ללא הגבלת נסיעות', done: false },
-  { id: 't3', text: '🚕 כלל הזהב: לעולם אל תיסע ב-Taxi – Uber/Lyft תמיד זול יותר', done: false },
-  { id: 't4', text: '🍕 פרוסת פיצה כשר? Basil Pizza בשדרה ה-5. פיצה כי כי? כל פינה', done: false },
-  { id: 't5', text: '👟 תנעל נעלי הליכה מוריות – תלך בממוצע 20,000+ צעדים ביום', done: false },
-  { id: 't6', text: '🏀 W 4th St Courts (The Cage) – תלך עם עומר, תראה בסקטבול רחוב אמיתי', done: false },
-  { id: 't7', text: '🌅 Sunrise בגשר ברוקלין – תגיע ב-6AM, ריק מאנשים, תמונות מגעילות', done: false },
-  { id: 't8', text: '🛒 קניות קוסמטיקה: Pasteur Pharmacy ב-Midtown – מחירים פנומנליים', done: false },
-  { id: 't9', text: '🔌 תקן חשמל אמריקאי A/B – 110V. הבא מתאם אם צריך', done: false },
-  { id: 't10', text: '🧳 Jersey Gardens Outlet – 45 דקות מ-Manhattan, פנה חצי יום', done: false },
-  { id: 't11', text: '💧 מים בחינם בכל מקום – NYC tap water מהטובים בעולם', done: false },
-  { id: 't12', text: '🌆 תצפית בחינם? גג קולסייוס של Whole Foods ב-Bryant Park', done: false },
-  { id: 't13', text: '📸 Brooklyn Bridge – תחצה ברגל מ-Brooklyn לצד Manhattan, תמונות שיגעון', done: false },
-  { id: 't14', text: '🎭 TKTS Booth בTimes Square – כרטיסי Broadway ב-50% הנחה ביום ההצגה', done: false },
-  { id: 't15', text: '⚡ Smorgasburg – כל שבת בברוקלין (Williamsburg) ו-Prospect Park', done: false },
-  { id: 't16', text: '💵 טיפ – בארה"ב חובה לתת 18-20% במסעדות, מוגש ב-bill בדרך כלל', done: false },
-  { id: 't17', text: '🌉 Staten Island Ferry – בחינם, נוף אדיר לפסל החירות, 25 דקות', done: false },
-  { id: 't18', text: '📵 International plan – בדוק עם סלולרי לפני היציאה, Verizon/AT&T roaming יקר', done: false },
-  { id: 't19', text: '🎒 תשאיר דרכון בכספת המלון, תצא רק עם צילום', done: false },
-  { id: 't20', text: '🏨 Midtown הכי נוח לתחבורה – Times Square קרוב לכל, אבל רועש בלילה', done: false },
+  { id: 't1', text: '📱 הורד את אפליקציית MTA – כל פרטי מטרו ואוטובוס בזמן אמת' },
+  { id: 't2', text: '🎫 קנה MetroCard ב-$34 לשבוע – ללא הגבלת נסיעות' },
+  { id: 't3', text: '🚕 כלל הזהב: לעולם אל תיסע ב-Taxi – Uber/Lyft תמיד זול יותר' },
+  { id: 't4', text: '🍕 פרוסת פיצה כשר? Basil Pizza בשדרה ה-5. פרוסה רגילה? כל פינה' },
+  { id: 't5', text: '👟 תנעל נעלי הליכה נוחות – תלך בממוצע 20,000+ צעדים ביום' },
+  { id: 't6', text: '🏀 W 4th St Courts (The Cage) – תלך עם עומר, תראו כדורסל רחוב אמיתי' },
+  { id: 't7', text: '🌅 Sunrise בגשר ברוקלין – תגיע ב-6AM, ריק מאנשים, תמונות מדהימות' },
+  { id: 't8', text: '🛒 קניות קוסמטיקה: Pasteur Pharmacy ב-Midtown – מחירים פנומנליים' },
+  { id: 't9', text: '🔌 תקע חשמל אמריקאי A/B – 110V. הבא מתאם אם צריך' },
+  { id: 't10', text: '🧳 Jersey Gardens Outlet – 45 דקות מ-Manhattan, פנה חצי יום' },
+  { id: 't11', text: '💧 מים בחינם בכל מקום – NYC tap water מהטובים בעולם' },
+  { id: 't12', text: '🌆 תצפית בחינם? גג Whole Foods ליד Bryant Park' },
+  { id: 't13', text: '📸 Brooklyn Bridge – תחצה ברגל מ-Brooklyn לצד Manhattan, תמונות שיגעון' },
+  { id: 't14', text: '🎭 TKTS Booth בTimes Square – כרטיסי Broadway ב-50% הנחה ביום ההצגה' },
+  { id: 't15', text: '⚡ Smorgasburg – שבת ב-Williamsburg, ראשון ב-Prospect Park, שישי ב-WTC' },
+  { id: 't16', text: '💵 טיפ – בארה"ב חובה לתת 18-20% במסעדות, מוגש ב-bill בדרך כלל' },
+  { id: 't17', text: '🌉 Staten Island Ferry – בחינם, נוף אדיר לפסל החירות, 25 דקות' },
+  { id: 't18', text: '📵 International plan – בדוק עם סלולרי לפני היציאה, Verizon/AT&T roaming יקר' },
+  { id: 't19', text: '🎒 תשאיר דרכון בכספת המלון, תצא רק עם צילום' },
+  { id: 't20', text: '🏨 Midtown הכי נוח לתחבורה – Times Square קרוב לכל, אבל רועש בלילה' },
 ];
 
+let tips = [...TIPS];
 let tipsState = {};
 TIPS.forEach(t => tipsState[t.id] = false);
 
 let activeFilter = 'all';
-let pendingSlot = null; // { dayId, slotIndex }
+let pendingSlot = null; // { dayId, slotName }
 let claudeCache = {};
+let editingItemId = null;
+let editingItemCat = null;
+let editingTipId = null;
 
 // ==================== STATE PERSISTENCE (CLOUD) ====================
 let saveTimer = null;
+let stateLoaded = false; // דגל לוודא שלא נשמור ב-Vercel לפני שהטענו
 
 function buildStateSnapshot() {
   const allItems = [...bank.do, ...bank.eat, ...bank.buy];
@@ -721,13 +739,14 @@ function applyStateSnapshot(snap) {
   });
   DAYS.forEach(d => { if (savedSchedule?.[d.id]) schedule[d.id] = savedSchedule[d.id]; });
   if (savedTips) Object.keys(savedTips).forEach(k => { tipsState[k] = savedTips[k]; });
-  if (tipsList) {
+  if (tipsList && Array.isArray(tipsList) && tipsList.length > 0) {
     tips = tipsList;
     tips.forEach(t => { if (tipsState[t.id] === undefined) tipsState[t.id] = false; });
   }
 }
 
 function saveState() {
+  if (!stateLoaded) return; // הגנה: לא לשמור לפני שהטענו
   // debounce – wait 800ms after last change before sending
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
@@ -751,6 +770,7 @@ async function loadState() {
       applyStateSnapshot(snap);
     }
   } catch(e) { console.warn('load failed', e); }
+  stateLoaded = true;
 }
 
 // ==================== RENDER BANK ====================
@@ -816,6 +836,7 @@ function cycleCat(id, currentCat) {
       if (schedule[d.id][sl]?.itemId === id) schedule[d.id][sl].cat = nextCat;
     });
   });
+  delete claudeCache[id]; // שינוי קטגוריה = prompt אחר ל-Claude
   saveState(); renderBank(); renderSchedule();
 }
 
@@ -913,15 +934,36 @@ function openModal(dayId, slotName) {
   document.getElementById('modal').style.display = 'flex';
 }
 
+// עוזר: מצא את ה-dayId של פריט לפי חיפוש בלו"ז
+function findDayIdByItem(itemId) {
+  for (const day of DAYS) {
+    for (const slotName of Object.keys(schedule[day.id])) {
+      if (schedule[day.id][slotName]?.itemId === itemId) {
+        return day.id;
+      }
+    }
+  }
+  return null;
+}
+
 function assignToSlot(itemId, cat) {
   if (!pendingSlot) return;
   const { dayId, slotName } = pendingSlot;
   const item = bank[cat].find(i => i.id === itemId);
   if (item) {
-    // remove old assignment if existed
-    if (item.assignedDay) {
-      const oldDay = schedule['d' + item.assignedDay];
-      if (oldDay) { Object.keys(oldDay).forEach(k => { if(oldDay[k]?.itemId===itemId) delete oldDay[k]; }); }
+    // הסר שיבוץ קודם (אם קיים) – גישה עמידה יותר: חיפוש על פי itemId
+    const oldDayId = findDayIdByItem(itemId);
+    if (oldDayId) {
+      Object.keys(schedule[oldDayId]).forEach(k => {
+        if (schedule[oldDayId][k]?.itemId === itemId) delete schedule[oldDayId][k];
+      });
+    }
+    // אם ה-slot היעד כבר תפוס, שחרר את הפריט הקודם
+    if (schedule[dayId][slotName]) {
+      const prevItemId = schedule[dayId][slotName].itemId;
+      const prevCat = schedule[dayId][slotName].cat;
+      const prevItem = bank[prevCat]?.find(i => i.id === prevItemId);
+      if (prevItem) prevItem.assignedDay = null;
     }
     const dayNum = DAYS.findIndex(d => d.id === dayId) + 1;
     item.assignedDay = dayNum;
@@ -980,9 +1022,6 @@ function closeClaudePanel(e) { if (e.target.id === 'claude-panel') closeClaudePa
 function closeClaudePanelDirect() { document.getElementById('claude-panel').style.display = 'none'; }
 
 // ==================== EDIT ITEM ====================
-let editingItemId = null;
-let editingItemCat = null;
-
 function openEditItem(id, cat) {
   const item = bank[cat].find(i => i.id === id);
   if (!item) return;
@@ -1042,10 +1081,7 @@ function closeEditModalDirect() {
   editingItemId = null; editingItemCat = null;
 }
 
-
-let tips = [...TIPS];
-let editingTipId = null;
-
+// ==================== TIPS ====================
 function renderTips() {
   const container = document.getElementById('tips-list');
   container.innerHTML = `
@@ -1057,7 +1093,7 @@ function renderTips() {
           <textarea id="tip-edit-${tip.id}" style="background:var(--bg3);border:1px solid var(--accent);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:0.82rem;padding:0.5rem;resize:vertical;min-height:60px;width:100%;">${tip.text}</textarea>
           <div style="display:flex;gap:0.4rem;">
             <button class="btn-tiny" style="flex:1;" onclick="saveTipEdit('${tip.id}')">שמור</button>
-            <button class="btn-tiny" onclick="editingTipId=null;renderTips()">ביטול</button>
+            <button class="btn-tiny" onclick="cancelTipEdit()">ביטול</button>
           </div>
         </div>`;
       }
@@ -1090,6 +1126,11 @@ function startEditTip(id) {
   if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
 }
 
+function cancelTipEdit() {
+  editingTipId = null;
+  renderTips();
+}
+
 function saveTipEdit(id) {
   const ta = document.getElementById('tip-edit-' + id);
   if (!ta) return;
@@ -1102,6 +1143,7 @@ function saveTipEdit(id) {
 }
 
 function deleteTip(id) {
+  if (!confirm('למחוק את הטיפ?')) return;
   tips = tips.filter(t => t.id !== id);
   delete tipsState[id];
   saveState(); renderTips();
@@ -1119,11 +1161,11 @@ function addTip() {
 }
 
 // ==================== TABS ====================
-function switchTab(name) {
+function switchTab(name, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + name).classList.add('active');
-  event.target.classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
 // ==================== INIT ====================
